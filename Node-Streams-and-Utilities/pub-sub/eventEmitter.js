@@ -16,4 +16,4 @@ eventEmitter.on("kitten-removed", () => {
 });
 
 eventEmitter.emit("kitten-added", "Puffy", 8);
-eventEmitter.emit("kitten-removed");
+eventEmitter.emit("kitten-removed"); 
