@@ -113,8 +113,8 @@ app.get('/route-redirect', (req, res) => {
 
 app.post('/cars', (req, res) => {
     console.log(req.body);
-    const model = req.body.name;
-    const year = Number(req.body.age);
+    const model = req.body.model;
+    const year = Number(req.body.year);
     addCar(model,year);
     res.send('New car has been created!');
 });
