@@ -1,8 +1,14 @@
-const exp = require('constants');
 const express = require('express');
+const handlebars = require('express-handlebars');
 const path = require('path');
 const app = express();
 const PORT = 5100;
+
+const {getCars, addCar} = require('./cars')
+
+//View Engine
+app.engine("hbs", handlebars.engine({extname: "hbs"}));
+app.set("view engine", "hbs");
 
 //Middleware
 //Third-party middleware
@@ -31,40 +37,48 @@ const specificMiddleware = (req, res, next) => {
 
 //Routing
 app.get('/', (req, res) => {
-    res.send('Welcome, this is the home page!');
+    // res.send('Welcome, this is the home page!');
+    res.render("home");
 });
+
+app.get('/about', (req, res) => {
+    res.render("about")
+})
 
 //Endpoint - method, path, action.
 //GET - method; /cars - path; action - (req, res) => {};
 app.get('/cars', (req, res) => {
-    res.send(`<!DOCTYPE html>
-        <html lang="en">
+    const cars = getCars();
+    res.render('cars', cars)
+    // res.send(`<!DOCTYPE html>
+    //     <html lang="en">
         
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="stylesheet" href="./css/styles.css">
-            <title>Document</title>
-        </head>
+    //     <head>
+    //         <meta charset="UTF-8">
+    //         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //         <link rel="stylesheet" href="./css/styles.css">
+    //         <title>Document</title>
+    //     </head>
         
-        <body>
+    //     <body>
         
-            <form method="post" >
-                <label for="name">Model:</label>
-                <br>
-                <input type="text" id="name" name="name">
-                <br>
-                <label for="year">Year:</label>
-                <br>
-                <input type="text" id="year" name="year" >
-                <br>
-                <br>
-                <input type="submit" value="Submit">
-            </form>
+    //         <form method="post" >
+    //             <label for="name">Model:</label>
+    //             <br>
+    //             <input type="text" id="name" name="name">
+    //             <br>
+    //             <label for="year">Year:</label>
+    //             <br>
+    //             <input type="text" id="year" name="year" >
+    //             <br>
+    //             <br>
+    //             <input type="submit" value="Create Car">
+    //         </form>
         
-        </body>
+    //     </body>
         
-        </html>`);
+    //     </html>`);
+
 });
 
 app.get('/cars/:carsId', (req, res) => {
@@ -99,6 +113,9 @@ app.get('/route-redirect', (req, res) => {
 
 app.post('/cars', (req, res) => {
     console.log(req.body);
+    const model = req.body.name;
+    const year = Number(req.body.age);
+    addCar(model,year);
     res.send('New car has been created!');
 });
 

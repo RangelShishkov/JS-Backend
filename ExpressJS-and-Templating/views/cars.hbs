@@ -1,0 +1,20 @@
+{{#if cars}}
+{{#each cars}}
+{{>car}}
+{{/each}}
+{{else}}
+<p>There are no cars</p>
+{{/if}}
+
+<form method="post">
+    <label for="name">Model:</label>
+    <br>
+    <input type="text" id="name" name="name">
+    <br>
+    <label for="year">Year:</label>
+    <br>
+    <input type="text" id="year" name="year">
+    <br>
+    <br>
+    <input type="submit" value="Create Car">
+</form>
