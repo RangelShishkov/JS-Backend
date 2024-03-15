@@ -4,6 +4,8 @@ const handlebars = require("express-handlebars");
 const app = express();
 const PORT = 5100;
 
+const {addBreed, getBreeds} = require("./breed")
+
 //View engine
 app.engine("hbs", handlebars.engine({ extname: "hbs" }));
 app.set("view engine", "hbs");
@@ -31,6 +33,7 @@ app.get("/add-cat", (req, res) => {
 
 app.post("/add-breed", (req, res) => {
     const breedName = req.body.breed;
+    addBreed(breedName);
     res.redirect("/");
 })
 
