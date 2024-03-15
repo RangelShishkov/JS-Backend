@@ -1,10 +1,19 @@
+//Imports
 const express = require("express");
+const handlebarsConfig = require("./config/handlebarsConfig");
+const expressConfig = require("./config/expressConfig");
+const { PORT } = require("./constants");
+
+//Local Variables
 const app = express();
 
-const PORT = 5050;
+//Configs
+expressConfig(app);
+handlebarsConfig(app);
 
-app.get('/', (req, res) => {
-res.send("Hello from express server!");
+//Routing
+app.get("/", (req, res) => {
+  res.render("index");
 });
 
 app.listen(PORT, () => console.log(`Server is running on PORT:${PORT}`));
