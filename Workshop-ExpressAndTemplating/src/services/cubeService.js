@@ -1,29 +1,18 @@
 const uniqid = require("uniqid");
+const fs = require('fs');
+const path = require('path');
 
-const cubes = [
-  {
-    id: "1ryucr7t8ltue8q1v",
-    name: "Kub1",
-    description: "Desc1",
-    imageUrl:
-      "https://kendamabulgaria.bg/wp-content/uploads/2024/01/%D0%A0%D0%A3%D0%91%D0%98%D0%9A-%D0%9A%D0%A3%D0%91%D0%A7%D0%95-3-X-3-X-3-V-CUBE-RUBIKS-CUBE-1.jpg",
-    difficultyLevel: 2,
-  },
-  {
-    id: "1ryucr7t8ltue8tw7",
-    name: "asdas",
-    description: "asdasd",
-    imageUrl: "asdas",
-    difficultyLevel: 5,
-  },
-  {
-    name: "kub2",
-    description: "desc2",
-    imageUrl:
-      "https://kendamabulgaria.bg/wp-content/uploads/2024/01/%D0%A0%D0%A3%D0%91%D0%98%D0%9A-%D0%9A%D0%A3%D0%91%D0%A7%D0%95-3-X-3-X-3-V-CUBE-RUBIKS-CUBE-1.jpg",
-    difficultyLevel: "5",
-  },
-];
+const DATABASE_FILE = path.join(__dirname, 'database.json');
+
+const saveCubesToFile = (cubes) => {
+  fs.writeFile(DATABASE_FILE, JSON.stringify(cubes, null, 2), (err) => {
+    if (err) {
+      console.error('Error writing file:', err);
+      return;
+    }
+    console.log('Data written to file successfully');
+  });
+};
 
 exports.create = (cubeData) => {
   const id = uniqid();
@@ -32,32 +21,53 @@ exports.create = (cubeData) => {
     ...cubeData,
   };
 
-  cubes.push(newCube);
+  // Read existing cubes from the file
+  fs.readFile(DATABASE_FILE, (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      return;
+    }
+
+    let cubes = JSON.parse(data); // Parse the existing JSON data
+    cubes.push(newCube); // Add the new cube
+    saveCubesToFile(cubes); // Save the updated cubes to file
+  });
 
   return newCube;
 };
 
 exports.getAll = (search, from, to) => {
-  let filterCubes = [...cubes];
+  try {
+    const data = fs.readFileSync(DATABASE_FILE);
+    let cubes = JSON.parse(data);
 
-  if (search) {
-    filterCubes = filterCubes.filter((cube) =>
-      cube.name.toLowerCase().includes(search.toLowerCase())
-    );
+    // Apply search filter if provided
+    if (search) {
+      cubes = cubes.filter(cube =>
+        cube.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    // Apply difficulty level filter if provided
+    if (from) {
+      cubes = cubes.filter(cube =>
+        cube.difficultyLevel >= Number(from)
+      );
+    }
+    if (to) {
+      cubes = cubes.filter(cube =>
+        cube.difficultyLevel <= Number(to)
+      );
+    }
+
+    return cubes;
+  } catch (error) {
+    console.error('Error reading file:', error);
+    return [];
   }
-  if (from) {
-    filterCubes = filterCubes.filter(
-      (cube) => cube.difficultyLevel >= Number(from)
-    );
-  }
-  if (to) {
-    filterCubes = filterCubes.filter(
-      (cube) => cube.difficultyLevel <= Number(from)
-    );
-  }
-  return filterCubes;
 };
 
 exports.getSingleCube = (id) => {
+  const cubes = this.getAll();
   return cubes.find((cube) => cube.id === id);
 };
