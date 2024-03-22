@@ -1,8 +1,4 @@
-const fs = require("fs");
-const path = require("path");
 const Cube = require("./../models/Cube");
-
-const DATABASE_FILE = path.join(__dirname, "database.json");
 
 exports.create = async (cubeData) => {
   const cube = await Cube.create(cubeData);
@@ -10,34 +6,35 @@ exports.create = async (cubeData) => {
   return cube;
 };
 
-exports.getAll = (search, from, to) => {
-  try {
-    const data = fs.readFileSync(DATABASE_FILE);
-    let cubes = JSON.parse(data);
+exports.getAll = async (search, from, to) => {
+  let filterCubes = await Cube.find().lean();
 
-    // Apply search filter if provided
-    if (search) {
-      cubes = cubes.filter((cube) =>
-        cube.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // Apply difficulty level filter if provided
-    if (from) {
-      cubes = cubes.filter((cube) => cube.difficultyLevel >= Number(from));
-    }
-    if (to) {
-      cubes = cubes.filter((cube) => cube.difficultyLevel <= Number(to));
-    }
-
-    return cubes;
-  } catch (error) {
-    console.error("Error reading file:", error);
-    return [];
+  // TODO: this will be filtered later with mongoose
+  if (search) {
+    filterCubes = filterCubes.filter((cube) =>
+      cube.name.toLowerCase().includes(search.toLowerCase())
+    );
   }
+
+  if (from) {
+    filterCubes = filterCubes.filter(
+      (cube) => cube.difficultyLevel >= Number(from)
+    );
+  }
+
+  if (to) {
+    filterCubes = filterCubes.filter(
+      (cube) => cube.difficultyLevel <= Number(to)
+    );
+  }
+
+  return filterCubes;
 };
 
-exports.getSingleCube = (id) => {
-  const cubes = this.getAll();
-  return cubes.find((cube) => cube.id === id);
+exports.getSingleCube = (id) => Cube.findById(id).populate("accessories");
+
+exports.attachAccessory = async (cubeId, accessoryId) => {
+  const cube = await this.getSingleCube(cubeId);
+  cube.accessories.push(accessoryId);
+  return cube.save();
 };
