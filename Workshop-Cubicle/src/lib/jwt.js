@@ -1,4 +1,3 @@
-const { json } = require("express");
 const jsonwebtoken = require("jsonwebtoken");
 const { promisify } = require("util");
 

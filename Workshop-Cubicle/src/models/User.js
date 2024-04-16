@@ -8,12 +8,11 @@ const userSchema = new mongoose.Schema({
 
 userSchema.virtual("repeatPassword").set(function (value) {
   if (value !== this.password) {
-    throw new mongoose.MongooseError("Password does not match!");
+    throw new mongoose.MongooseError("Password missmatch!");
   }
 });
 
 userSchema.pre("save", async function () {
-  //this.password
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
 });

@@ -1,15 +1,16 @@
 const Cube = require("./../models/Cube");
+const cubes = [];
 
 exports.create = async (cubeData) => {
-  const cube = await Cube.create(cubeData);
 
+  const cube = await Cube.create(cubeData);
   return cube;
 };
 
 exports.getAll = async (search, from, to) => {
   let filterCubes = await Cube.find().lean();
 
-  // TODO: this will be filtered later with mongoose
+  
   if (search) {
     filterCubes = filterCubes.filter((cube) =>
       cube.name.toLowerCase().includes(search.toLowerCase())
@@ -38,3 +39,7 @@ exports.attachAccessory = async (cubeId, accessoryId) => {
   cube.accessories.push(accessoryId);
   return cube.save();
 };
+
+exports.update = (id, cubeData) => Cube.findByIdAndUpdate(id, cubeData);
+
+exports.delete = (id) => Cube.findByIdAndDelete(id);
