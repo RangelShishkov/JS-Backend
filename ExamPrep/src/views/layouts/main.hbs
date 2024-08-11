@@ -27,17 +27,26 @@
           <li><a href="#">Home</a></li>
           <li><a href="#">All Posts</a></li>
           <!-- Logged users -->
-          <li><a href="#">Create Post</a></li>
-          <li><a href="#">Profile</a></li>
-          <li><a href="/users/logout">Logout</a></li>
-          <!-- Guest users -->
-          <li><a href="/users/register">Register</a></li>
-          <li><a href="/users/login">Login</a></li>
+          {{#if isAuthenticated}}
+            <li><a href="#">Create Post</a></li>
+            <li><a href="#">Profile</a></li>
+            <li><a href="/users/logout">Logout</a></li>
+          {{else}}
+            <!-- Guest users -->
+            <li><a href="/users/register">Register</a></li>
+            <li><a href="/users/login">Login</a></li>
+          {{/if}}
         </ul>
 
       </nav>
 
       <main>
+
+        {{#each errorMessages}}
+          <div class="error-container">
+            <p>{{this}}</p>
+          </div>
+        {{/each}}
 
         {{{body}}}
 
