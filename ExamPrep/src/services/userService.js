@@ -19,7 +19,9 @@ exports.register = async (userData) => {
   await validatePassword(password, user.password);
 
   const token = await getToken(user);
+
   return token;
+
 };
 
 async function getToken(user) {
@@ -39,5 +41,6 @@ exports.login = async (email, password) => {
   await validatePassword(password, user.password);
 
   const token = await getToken(user);
+
   return token;
 };

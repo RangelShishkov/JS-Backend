@@ -1,61 +1,77 @@
+<main>
 
-        <main>
+  <section id="details-page">
 
-            <section id="details-page">
+    <div class="main_card">
+      <div class="card_left">
+        <div class="card_datails">
 
-                <div class="main_card">
-                    <div class="card_left">
-                        <div class="card_datails">
+          <h1>Name: {{creature.name}}</h1>
+          <h3>Created by an author: Alex Smith</h3>
+          <div class="card_character">
+            <p class="card-species">Species: {{creature.species}}</p>
+            <p class="card-skin">Skin colour: {{creature.skinColor}}</p>
+            <p class="card-eye">Eye Colour: {{creature.eyeColor}}</p>
+          </div>
 
-                            <h1>Name: Thestral</h1>
-                            <h3>Created by an author: Alex Smith</h3>
-                            <div class="card_character">
-                                <p class="card-species">Species: Beast</p>
-                                <p class="card-skin">Skin colour: Black</p>
-                                <p class="card-eye">Eye Colour: White</p>
-                            </div>
+          <p class="disc">{{creature.description}}</p>
 
-                            <p class="disc">Description: Thestrals are an elusive, carnivorous species of winged horse, visible only to those who have witnessed and embraced a death, and described as having "blank, white, shining eyes," a "dragonish face," "long, black manes," "great leathery wings," and the "skeletal body of a great, black, winged horse"; also described by Hagrid as "dead clever an' useful", and also by Harry as "reptilian".</p>
+          <!-- If there is no registered user, do not display buttons-->
+          {{#if isAuthenticated}}
+            <div class="social-btn">
+              <!-- Only for registered user and author of the post -->
+              {{#if isOwner}}
+                <a href="/posts/{{creature._id}}/edit" class="edit-btn">Edit</a>
+                <a
+                  href="/posts/{{creature._id}}/delete"
+                  class="del-btn"
+                >Delete</a>
+              {{else}}
+                <!-- logged in users, who have not yet voted-->
+                {{#unless hasVoted}}
+                  <a
+                    href="/posts/{{creature._id}}/vote"
+                    class="vote-up"
+                  >Vote</a>
+                {{/unless}}
+              {{/if}}
 
-                            <!-- If there is no registered user, do not display buttons-->
-                            <div class="social-btn">
-                                <!-- Only for registered user and author of the post -->
-                                <a href="#" class="edit-btn">Edit</a>
-                                <a href="#" class="del-btn">Delete</a>
-                                <!-- logged in users, who have not yet voted-->
-                                <a href="#" class="vote-up">Vote</a>
+              {{#if hasVoted}}
+                <!-- logged in user who has already voted-->
+                <p class="thanks-for-vote">Thanks For Voting</p>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+      </div>
+      <div class="card_right">
+        <img src="{{creature.image}}" alt="{{creature.name}}" />
+      </div>
+    </div>
 
-                                <!-- logged in user who has already voted-->
-                                <p class="thanks-for-vote">Thanks For Voting</p>
+  </section>
 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card_right">
-                        <img src="./static/img/Thestral.jpeg"
-                            alt="image">
-                    </div>
-                </div>
+  <section id="votes">
+    <div class="vote-info">
+      <div class="card_left">
+        <div class="card_datails">
+          <h1>Votes</h1>
+          <div class="card_vote">
+            <!-- Show the rating of votes, if there are no votes yet, the number must be 0. -->
+            <p class="PV">Total rating of votes: {{creature.votes.length}}</p>
+          </div>
+          <!-- If there are already people who have cast their vote for the post, separate their emails with a comma and a space ", " -->
+          {{#if joinedEmailsOfOwners}}
+            <p class="disc">People who voted for the post -
+              {{joinedEmailsOfOwners}}</p>
+          {{else}}
+            <!-- If not display: -->
+            <p class="disc">People who voted for the post - No one has voted
+              yet.</p>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </section>
 
-            </section>
-
-            <section id="votes">
-                <div class="vote-info">
-                    <div class="card_left">
-                        <div class="card_datails">
-                            <h1>Votes</h1>
-                            <div class="card_vote">
-                                <!-- Show the rating of votes, if there are no votes yet, the number must be 0. -->
-                                <p class="PV">Total rating of votes: 0</p>
-                            </div>
-                            <!-- If there are already people who have cast their vote for the post, separate their emails with a comma and a space ", " -->
-                            <!-- <p class="disc">People who voted for the post - alex@gmai.com, petar@gmail.com, petq@gmail.com</p>-->
-
-                            <!-- If not display: -->
-                            <p class="disc">People who voted for the post - No one has voted yet.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-        </main>
+</main>
