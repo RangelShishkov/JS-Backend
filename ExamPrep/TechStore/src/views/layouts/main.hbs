@@ -1,0 +1,49 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechStore - Laptops and Computers</title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <h1>TechStore</h1>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/offers/catalog">Catalog</a></li>
+            <li><a href="/about">About</a></li>
+            {{#if isAuthenticated}}
+            <li><a href="/users/profile">Profile</a></li>
+            <li><a href="/offers/create">Create Offer</a></li>
+            <li><a href="/users/logout">Logout</a></li>
+            {{else}}
+            <li><a href="/users/login">Login</a></li>
+            <li><a href="/users/register">Register</a></li>
+            {{/if}}
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- In case of error, you should display div with class "errorContainer" -->
+    <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
+    {{#each errorMessages}}
+      <div class="errorContainer">
+        <p>{{this}}</p>
+      </div>
+    {{/each}}
+
+    {{{body}}}
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2024 TechStore. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+
+</html>
